@@ -28,19 +28,24 @@ export async function mountCurrentSapling(userSaplingsResponse) {
   // saplings themselves can take over routing at that point to manage their
   // own routing (ie preventing full page refreshes, push on history)
 
+  console.log(`userSaplingsResponse ${JSON.stringify(userSaplingsResponse)}`);
   const topLevelPathRgx = /\/([^/]+)/i;
   const pathMatches = topLevelPathRgx.exec(window.location.pathname);
+  console.log(`pathMatches ${JSON.stringify(pathMatches)}`);
   const saplingNamespaceToLoad =
     pathMatches && pathMatches[1] ? pathMatches[1] : null;
   const currentSaplingManifest = userSaplingsResponse.find(
     ({ namespace }) => saplingNamespaceToLoad === namespace
   );
 
+  console.log(`currentSaplingManifest ${currentSaplingManifest}`);
+
   if (currentSaplingManifest) {
     await Promise.all(
-      currentSaplingManifest.runtimeFiles.map(saplingFile =>
+      currentSaplingManifest.runtimeFiles.map(saplingFile => {
+        console.log(`saplingFile ${saplingFile}`);
         promiseLoader(`http://${saplingFile}`)
-      )
+      })
     );
     return true;
   }

@@ -89,16 +89,20 @@ export function CanopyProvider({
   useEffect(() => {
     window.$CANOPY = window.$CANOPY || {};
     window.$CANOPY.registerApp = bootStrapFunction => {
+      console.log("Running registerApp");
       bootStrapFunction(document.querySelector('#sapling-container'));
     };
 
     fetchConfigSaplings(saplingURL).then(saplings => {
-      mountConfigSaplings(saplings);
-      mountSaplingStyles(saplings);
+      Promise.all([
+        mountConfigSaplings(saplings),
+        mountSaplingStyles(saplings)
+      ]).then(() => console.log('mount configs*'));
     });
   }, [saplingURL]);
 
   useEffect(() => {
+    console.log('The thing we don\'t care about');
     window.$CANOPY.registerConfigSapling = (namespace, bootStrapFunction) => {
       bootStrapFunction();
       return setConfigSaplings(currentConfigSaplings => {
@@ -109,9 +113,11 @@ export function CanopyProvider({
 
   useEffect(() => {
     fetchUserSaplings(saplingURL).then(saplings => {
-      mountSaplingStyles(saplings);
-      mountCurrentSapling(saplings);
-      setUserSaplings(saplings);
+      Promise.all([
+        mountSaplingStyles(saplings),
+        mountCurrentSapling(saplings),
+        setUserSaplings(saplings)
+      ]).then(() => console.log('set user saplings side effect*'))
     });
   }, [saplingURL]);
 
