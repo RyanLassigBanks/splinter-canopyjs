@@ -121,7 +121,7 @@ export function CanopyProvider({
       window.$CANOPY.redirectedFrom = window.location.href;
       history.push('/login');
     }
-  }, [saplingURL]);
+  }, [saplingURL, document.getElementById('root')]);
 
   return (
     <CanopyContext.Provider
